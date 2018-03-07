@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tic Tac Toe</title>
+    <style>
+        html, body, .container {
+            height: 100%;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 33% 33% 33%;
+            grid-template-rows: 33% 33% 33%;
+        }
+        [class*="cell-"] input {
+            display: none;
+        }
+        input.turn-X:checked + .icon::after {
+            content: '⊘';
+        }
+        input.turn-O:checked + .icon::after {
+            content: '⦿';
+        }
+        [class*="cell-"] {
+            border: 1px solid #c2c2c2;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <label class="cell-0"><input name="cell-0" type="checkbox"><div class="icon"></div></label>
+        <label class="cell-1"><input name="cell-1" type="checkbox"><div class="icon"></div></label>
+        <label class="cell-2"><input name="cell-2" type="checkbox"><div class="icon"></div></label>
+        <label class="cell-3"><input name="cell-3" type="checkbox"><div class="icon"></div></label>
+        <label class="cell-4"><input name="cell-4" type="checkbox"><div class="icon"></div></label>
+        <label class="cell-5"><input name="cell-5" type="checkbox"><div class="icon"></div></label>
+        <label class="cell-6"><input name="cell-6" type="checkbox"><div class="icon"></div></label>
+        <label class="cell-7"><input name="cell-7" type="checkbox"><div class="icon"></div></label>
+        <label class="cell-8"><input name="cell-8" type="checkbox"><div class="icon"></div></label>
+    </div>
+    
+</body>
+<script>
+    const SIDES = ['X', 'O'];
+    let currentSide = SIDES[0];
+    const containerNode = document.querySelector('.container');
+    containerNode.addEventListener('change', function(event){
+        event.target.disabled = true;
+        let currentIndex = SIDES.indexOf(currentSide);
+        event.target.classList.add(`turn-${SIDES[currentIndex]}`)
+        const nextState = SIDES[(currentIndex + 1) % SIDES.length];
+        currentSide = nextState;
+    });
+</script>
+</html>

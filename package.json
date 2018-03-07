@@ -1,0 +1,22 @@
+{
+  "name": "tic-tac-toe",
+  "version": "0.0.1",
+  "private": false,
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dkunin/tic-tac-toe.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dkunin/tic-tac-toe/issues"
+  },
+  "scripts": {
+    "test": "echo test",
+    "start": "node ./",
+    "dev": "node ./",
+    "build": "NODE_ENV=production node ./"
+  },
+  "homepage": "https://github.com/dkunin/tic-tac-toe",
+  "keywords": [],
+  "license": "MIT"
+}
