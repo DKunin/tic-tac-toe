@@ -6,6 +6,7 @@
     <style>
         html, body, .container {
             height: 100%;
+            font-family: Helvetica, Arial;
         }
         .container {
             display: grid;
@@ -16,19 +17,57 @@
             display: none;
         }
         input.turn-X:checked + .icon::after {
-            content: '⊘';
+            content: '🦉';
+            font-size: 440%;
         }
         input.turn-O:checked + .icon::after {
-            content: '⦿';
+            content: '🐀';
+            font-size: 440%;
         }
         [class*="cell-"] {
             border: 1px solid #c2c2c2;
-            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 0;
+        }
+        .dialog-container.opened {
+            pointer-events: inherit;
+            background-color: rgba(0,0,0,.3);
+        }
+        .dialog-container {
+            pointer-events: none;
+            position: absolute;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        dialog {
             text-align: center;
+        }
+        .dialog-result {
+            text-align: center;
+            font-size: 75px;
+        }
+        .dialog-button {
+            border: 3px solid gray;
+            background-color: transparent;
+            font-size: 20px;
         }
     </style>
 </head>
 <body>
+    <div class="dialog-container">
+        <dialog>
+          <div class="dialog-result">Winner is <br/> 🐀</div>
+          <button class="dialog-button" type="button">Reload</button>
+        </dialog>
+    </div>
+
     <div class="container">
         <label class="cell-0"><input name="cell-0" type="checkbox"><div class="icon"></div></label>
         <label class="cell-1"><input name="cell-1" type="checkbox"><div class="icon"></div></label>
@@ -39,19 +78,70 @@
         <label class="cell-6"><input name="cell-6" type="checkbox"><div class="icon"></div></label>
         <label class="cell-7"><input name="cell-7" type="checkbox"><div class="icon"></div></label>
         <label class="cell-8"><input name="cell-8" type="checkbox"><div class="icon"></div></label>
-    </div>
-    
+    </div>    
 </body>
 <script>
     const SIDES = ['X', 'O'];
     let currentSide = SIDES[0];
     const containerNode = document.querySelector('.container');
+    const buttonNode = document.querySelector('button');
+    const dialogNode = document.querySelector('dialog');
+    const dialogContainerNode = document.querySelector('.dialog-container');
+    const dialogResultNode = dialogContainerNode.querySelector('.dialog-result');
+    const cellNodes = Array.from(document.querySelectorAll('input'));
+    
+    buttonNode.addEventListener('click', function(){
+        window.location.reload();
+    });
+
+    function finishGame(result, winner) {
+        if (result) {
+            dialogNode.open = true;
+            dialogContainerNode.classList.add('opened');
+            dialogResultNode.innerHTML = `Winner is <br/> ${winner}`
+        }
+    }
+
+    function currentResult(turn) {
+        return cellNodes.map((singleTag, index) => {
+            if (singleTag.className.includes(turn)) {
+                return index.toString();;
+            }
+            return undefined; 
+        })
+        .filter(Boolean)
+        .map(Number);
+    }
+
+    const winningConditions = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ];
+
+
+    function determineWinner(sequence) {
+        return winningConditions.some((winningConditions) => {
+            return winningConditions.every(singleCell => {
+                return sequence.includes(singleCell);
+            });
+        });
+    }
+
     containerNode.addEventListener('change', function(event){
         event.target.disabled = true;
         let currentIndex = SIDES.indexOf(currentSide);
         event.target.classList.add(`turn-${SIDES[currentIndex]}`)
         const nextState = SIDES[(currentIndex + 1) % SIDES.length];
         currentSide = nextState;
+
+        finishGame(determineWinner(currentResult('X')), '🦉');
+        finishGame(determineWinner(currentResult('O')), '🐀');
     });
 </script>
 </html>
