@@ -18,23 +18,41 @@
         }
         input.turn-X:checked + .icon::after {
             content: '🦉';
-            font-size: 440%;
+            font-size: 800%;
         }
         input.turn-O:checked + .icon::after {
             content: '🐀';
-            font-size: 440%;
+            font-size: 800%;
         }
         [class*="cell-"] {
-            border: 1px solid #c2c2c2;
+            border: 1px solid rgba(0,0,0,.1);
             display: flex;
             justify-content: center;
             align-items: center;
             line-height: 0;
+            cursor: pointer;
         }
+        .cell-0, .cell-1, .cell-2 {
+            border-top-color: transparent;
+        }
+
+        .cell-2, .cell-5, .cell-8 {
+            border-right-color: transparent;
+        }
+
+        .cell-6, .cell-7, .cell-8 {
+            border-bottom-color: transparent;
+        }
+
+        .cell-0, .cell-3, .cell-6 {
+            border-left-color: transparent;
+        }
+
         .dialog-container.opened {
             pointer-events: inherit;
             background-color: rgba(0,0,0,.3);
         }
+
         .dialog-container {
             pointer-events: none;
             position: absolute;
@@ -46,6 +64,7 @@
             align-items: center;
             justify-content: center;
         }
+
         dialog {
             text-align: center;
         }
@@ -98,7 +117,7 @@
         if (result) {
             dialogNode.open = true;
             dialogContainerNode.classList.add('opened');
-            dialogResultNode.innerHTML = `Winner is <br/> ${winner}`
+            dialogResultNode.innerHTML = winner;
         }
     }
 
@@ -139,9 +158,9 @@
         event.target.classList.add(`turn-${SIDES[currentIndex]}`)
         const nextState = SIDES[(currentIndex + 1) % SIDES.length];
         currentSide = nextState;
-
-        finishGame(determineWinner(currentResult('X')), '🦉');
-        finishGame(determineWinner(currentResult('O')), '🐀');
+        finishGame(determineWinner(currentResult('X')), '🦉 > 🐀');
+        finishGame(determineWinner(currentResult('O')), '🐀 > 🦉');
+        finishGame(cellNodes.filter(singleNode => singleNode.checked).length === 9, '🐀 = 🦉');
     });
 </script>
 </html>
