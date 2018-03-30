@@ -100,67 +100,87 @@
     </div>    
 </body>
 <script>
-    const SIDES = ['X', 'O'];
-    let currentSide = SIDES[0];
-    const containerNode = document.querySelector('.container');
-    const buttonNode = document.querySelector('button');
-    const dialogNode = document.querySelector('dialog');
-    const dialogContainerNode = document.querySelector('.dialog-container');
-    const dialogResultNode = dialogContainerNode.querySelector('.dialog-result');
-    const cellNodes = Array.from(document.querySelectorAll('input'));
-    
-    buttonNode.addEventListener('click', function(){
-        window.location.reload();
-    });
+const SIDES = ['X', 'O'];
+let currentSide = SIDES[0];
+const containerNode = document.querySelector('.container');
+const buttonNode = document.querySelector('button');
+const dialogNode = document.querySelector('dialog');
+const dialogContainerNode = document.querySelector('.dialog-container');
+const dialogResultNode = dialogContainerNode.querySelector('.dialog-result');
+const cellNodes = Array.from(document.querySelectorAll('input'));
 
-    function finishGame(result, winner) {
-        if (result) {
-            dialogNode.open = true;
-            dialogContainerNode.classList.add('opened');
-            dialogResultNode.innerHTML = winner;
-        }
+buttonNode.addEventListener('click', function() {
+    window.location.reload();
+});
+
+function finishGame(result, winner) {
+    if (result) {
+        dialogNode.open = true;
+        dialogContainerNode.classList.add('opened');
+        dialogResultNode.innerHTML = winner;
     }
+}
 
-    function currentResult(turn) {
-        return cellNodes.map((singleTag, index) => {
+function currentResult(turn) {
+    return cellNodes
+        .map((singleTag, index) => {
             if (singleTag.className.includes(turn)) {
-                return index.toString();;
+                return index.toString();
             }
-            return undefined; 
+            return undefined;
         })
         .filter(Boolean)
         .map(Number);
-    }
+}
 
-    const winningConditions = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [2, 4, 6]
-    ];
+const winningConditions = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+];
 
-
-    function determineWinner(sequence) {
-        return winningConditions.some((winningConditions) => {
-            return winningConditions.every(singleCell => {
-                return sequence.includes(singleCell);
-            });
+function determineWinner(sequence) {
+    return winningConditions.some(winningConditions => {
+        return winningConditions.every(singleCell => {
+            return sequence.includes(singleCell);
         });
-    }
-
-    containerNode.addEventListener('change', function(event){
-        event.target.disabled = true;
-        let currentIndex = SIDES.indexOf(currentSide);
-        event.target.classList.add(`turn-${SIDES[currentIndex]}`)
-        const nextState = SIDES[(currentIndex + 1) % SIDES.length];
-        currentSide = nextState;
-        finishGame(determineWinner(currentResult('X')), '🦉 > 🐀');
-        finishGame(determineWinner(currentResult('O')), '🐀 > 🦉');
-        finishGame(cellNodes.filter(singleNode => singleNode.checked).length === 9, '🐀 = 🦉');
     });
+}
+
+containerNode.addEventListener('change', function(event) {
+    event.target.disabled = true;
+    let currentIndex = SIDES.indexOf(currentSide);
+    event.target.classList.add(`turn-${SIDES[currentIndex]}`);
+    const nextState = SIDES[(currentIndex + 1) % SIDES.length];
+    currentSide = nextState;
+    finishGame(determineWinner(currentResult('X')), '🦉 > 🐀');
+    finishGame(determineWinner(currentResult('O')), '🐀 > 🦉');
+    finishGame(
+        cellNodes.filter(singleNode => singleNode.checked).length === 9,
+        '🐀 = 🦉'
+    );
+});
+
+if ('serviceWorker' in navigator) {
+
+    navigator.serviceWorker
+        .register('service-worker.js')
+        .then(function(registration) {
+            // Registration Success
+            console.log(
+                '[serviceWorker]: registration successful with scope: ',
+                registration.scope
+            );
+        })
+        .catch(function(err) {
+            // Registration failed :(
+            console.log('[serviceWorker] registration failed', err);
+        });
+}
 </script>
 </html>
