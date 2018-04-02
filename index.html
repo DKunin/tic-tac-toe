@@ -19,14 +19,32 @@
         [class*="cell-"] input {
             display: none;
         }
-        input.turn-X:checked + .icon::after {
-            content: '🦉';
-            font-size: 800%;
+        .winner-owl,
+        .winner-rat {
+            border: 0;
         }
-        input.turn-O:checked + .icon::after {
-            content: '🐀';
-            font-size: 800%;
+
+        .winner-owl,
+        input.turn-X:checked + .icon {
+            width: 60px;
+            height: 60px;
+            background-size: contain;
         }
+        .winner-rat,
+        input.turn-O:checked + .icon {
+            width: 50px;
+            height: 50px;
+            background-size: contain;
+        }
+        .winner-owl,
+        input.turn-X:checked + .icon {
+            background-image: url('./assets/owl.svg');
+        }
+        .winner-rat,
+        input.turn-O:checked + .icon {
+            background-image: url('./assets/rat.svg');
+        }
+
         [class*="cell-"] {
             border: 1px solid rgba(0,0,0,.1);
             display: flex;
@@ -85,7 +103,7 @@
 <body>
     <div class="dialog-container">
         <dialog>
-          <div class="dialog-result">Winner is <br/> 🐀</div>
+          <div class="dialog-result"></div>
           <button class="dialog-button" type="button">Reload</button>
         </dialog>
     </div>
@@ -161,11 +179,11 @@ containerNode.addEventListener('change', function(event) {
     event.target.classList.add(`turn-${SIDES[currentIndex]}`);
     const nextState = SIDES[(currentIndex + 1) % SIDES.length];
     currentSide = nextState;
-    finishGame(determineWinner(currentResult('X')), '🦉 > 🐀');
-    finishGame(determineWinner(currentResult('O')), '🐀 > 🦉');
+    finishGame(determineWinner(currentResult('X')), '<img class="winner-owl"/> > <img class="winner-rat"/>');
+    finishGame(determineWinner(currentResult('O')), '<img class="winner-rat"/> > <img class="winner-owl"/>');
     finishGame(
         cellNodes.filter(singleNode => singleNode.checked).length === 9,
-        '🐀 = 🦉'
+        '<img class="winner-rat"/> = <img class="winner-owl"/>'
     );
 });
 
