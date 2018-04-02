@@ -5,14 +5,16 @@ const urlsToCache = [
     './',
     './index.html',
     './manifest.json',
-    './assets/icons/android-chrome-192x192.png',
-    './assets/icons/android-chrome-512x512.png',
+    './assets/owl.svg',
+    './assets/rat.svg',
     './assets/icons/favicon.ico',
     './assets/icons/icon-96.png',
     './assets/icons/icon-48.png',
     './assets/icons/icon-144.png',
     './assets/icons/icon-196.png',
-    './assets/icons/icon-384.png'
+    './assets/icons/icon-384.png',
+    './assets/icons/android-chrome-192x192.png',
+    './assets/icons/android-chrome-512x512.png'
 ];
 
 // Set the callback for the install step
